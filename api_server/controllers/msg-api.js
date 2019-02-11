@@ -5,7 +5,7 @@ const messageModel = mongoose.model("message");
 const getAllMessagesOrderedByLastPosted = (req, res) => {
   messageModel
     .find()
-    .sort({ _id: "desc" })
+    .sort({ _id: -1 })
     .exec((err, messages) => {
       if (err) {
         res.status(404).json(err);

@@ -13,7 +13,7 @@ class MsgBoard extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3003/msgs")
+    fetch("http://localhost:3000/api/v1/msgs")
       .then(response => this.handleHTTPErrors(response))
       .then(response => response.json())
       .then(result => {
@@ -32,24 +32,21 @@ class MsgBoard extends React.Component {
   }
 
   addMessage(message) {
-    let msgs = this.state.messages;
-    let id = msgs.length + 1;
-    
-    // add id attribute
-    message.id = id;
-    // append to array
-    msgs.push(message);
-    
-    // reverse sort by id
-    msgs.sort((a, b) => a.id - b.id);
+    // let msgs = this.state.messages;
+    // let id = msgs.length + 1;
 
-    // update state var
-    this.setState({
-      messages: msgs
-    });
+    // // add id attribute
+    // message.id = id;
+    // // append to array
+    // msgs.push(message);
+
+    // // update state var
+    // this.setState({
+    //   messages: msgs
+    // });
 
     // update back-end data
-    fetch("http://localhost:3003/msgs", {
+    fetch("http://localhost:3000/api/v1/msgs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -57,13 +54,18 @@ class MsgBoard extends React.Component {
       body: JSON.stringify(message)
     })
       .then(response => this.handleHTTPErrors(response))
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          messages: [result].concat(this.state.messages)
+        });
+      })
       .catch(error => {
         console.log(error);
       });
   }
 
   render() {
-    
     return (
       <React.Fragment>
         <NewMsg addMsgCallback={this.addMessage} />
