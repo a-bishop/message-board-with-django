@@ -12,7 +12,7 @@ class NewMsg extends React.Component {
     this.addMessage = this.addMessage.bind(this);
   }
 
-  handleText() {
+  handleText(event) {
     if (event.target.id === "name") {
       this.setState({
         name: event.target.value
@@ -24,7 +24,7 @@ class NewMsg extends React.Component {
     }
   };
 
-  addMessage() {
+  addMessage(event) {
     event.preventDefault();
 
     //save state vars to local

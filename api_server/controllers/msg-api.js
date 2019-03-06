@@ -26,7 +26,29 @@ const addNewMessage = (req, res) => {
   });
 };
 
+// DELETE Request Handler
+const deleteMessage = (req, res) => {
+  messageModel.findOneAndDelete(req.body.id, (err, msg) => {
+    if (err) return res.status(500).send(err);
+    const response = {
+      message: "Message deleted",
+      id: msg._id
+    };
+    return res.status(200).send(response);
+  });
+
+
+  // create(req.body, (err, message) => {
+  //   if (err) {
+  //     res.status(400).json(err);
+  //   } else {
+  //     res.status(201).json(message);
+  //   }
+  // });
+};
+
 module.exports = {
   getAllMessagesOrderedByLastPosted,
-  addNewMessage
+  addNewMessage,
+  deleteMessage
 };

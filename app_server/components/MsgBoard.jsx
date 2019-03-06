@@ -6,7 +6,7 @@ class MsgBoard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: []
+      messages: this.props.messages
     };
 
     this.addMessage = this.addMessage.bind(this);
@@ -18,7 +18,7 @@ class MsgBoard extends React.Component {
       .then(response => response.json())
       .then(result => {
         this.setState({
-          messages: result
+          messages: result,
         });
       })
       .catch(error => {
@@ -31,22 +31,8 @@ class MsgBoard extends React.Component {
     return response;
   }
 
-  addMessage(message) {
-    // let msgs = this.state.messages;
-    // let id = msgs.length + 1;
-
-    // // add id attribute
-    // message.id = id;
-    // // append to array
-    // msgs.push(message);
-
-    // // update state var
-    // this.setState({
-    //   messages: msgs
-    // });
-
-    // update back-end data
-    fetch("http://localhost:3000/api/v1/msgs", {
+  async addMessage(message) {
+    await fetch("http://localhost:3000/api/v1/msgs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -56,8 +42,10 @@ class MsgBoard extends React.Component {
       .then(response => this.handleHTTPErrors(response))
       .then(result => result.json())
       .then(result => {
+        console.log(result);
+        let newMsgs = [result].concat(this.state.messages);
         this.setState({
-          messages: [result].concat(this.state.messages)
+          messages: newMsgs
         });
       })
       .catch(error => {
@@ -69,7 +57,7 @@ class MsgBoard extends React.Component {
     return (
       <React.Fragment>
         <NewMsg addMsgCallback={this.addMessage} />
-        <MsgList messages={this.state.messages} />
+        <MsgList messages={this.state.messages}/>
       </React.Fragment>
     );
   }
