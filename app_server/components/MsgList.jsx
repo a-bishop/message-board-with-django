@@ -9,40 +9,27 @@ class MsgList extends React.Component {
       messages: this.props.messages
     };
 
-    this.deleteMessage = this.deleteMessage.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
-
-  deleteMessage(id) {
-    // event.preventDefault();
-
-    //save state vars to local
-    // let name = this.state.name;
-    // let msg = this.state.msg;
-    fetch("http://localhost:3000/api/v1/msgs", {
-      method: "DELETE",
-      body: id
-    })
-      .then(response => this.handleHTTPErrors(response))
-      .then(result => result.json())
-      .then(result => {
-        let newMsgs = this.state.messages.filter(msg => msg._id !== result.id);
-        this.setState({
-          messages: newMsgs
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  handleHTTPErrors(response) {
-    if (!response.ok) throw Error(response.status + ": " + response.statusText);
-    return response;
+  componentWillReceiveProps(nextProps) {
+    this.setState({ messages: nextProps.messages });  
   }
+
+  handleDelete(id) {
+    console.log("this", this);
+    this.props.deleteMsgCallback(id);
+  }
+
+  // handleHTTPErrors(response) {
+  //   if (!response.ok) throw Error(response.status + ": " + response.statusText);
+  //   return response;
+  // }
 
 
   render() {
+    console.log("state", this.state);
+    console.log("props", this.props);
     return (
       <table className="table table-striped table-bordered">
         <thead>
@@ -63,7 +50,7 @@ class MsgList extends React.Component {
         </thead>
         <tbody>
           {this.state.messages.map((message, index) =>
-            <Msg key={index} displayId={index} id={message._id} name={message.name} msg={message.msg} deleteMsgCallback={this.deleteMessage} />
+            <Msg key={index} displayId={index + 1} id={message._id} name={message.name} msg={message.msg} deleteMsgCallback={this.handleDelete} />
           )}
         </tbody>
       </table>

@@ -14,7 +14,7 @@ class Msg extends React.Component {
     render () {
         return (
             <tr>
-                <td>{this.props.displayId + 1}</td>
+                <td>{this.props.displayId}</td>
                 <td>{this.props.name}</td>
                 <td>{this.props.msg}</td>
                 <td><button type="submit" className="btn btn-danger" onClick={this.deleteMessage}>

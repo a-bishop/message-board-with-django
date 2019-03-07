@@ -10,6 +10,13 @@ class MsgBoard extends React.Component {
     };
 
     this.addMessage = this.addMessage.bind(this);
+    this.deleteMessage = this.deleteMessage.bind(this);
+  }
+
+
+  handleHTTPErrors(response) {
+    if (!response.ok) throw Error(response.status + ": " + response.statusText);
+    return response;
   }
 
   componentDidMount() {
@@ -26,13 +33,32 @@ class MsgBoard extends React.Component {
       });
   }
 
-  handleHTTPErrors(response) {
-    if (!response.ok) throw Error(response.status + ": " + response.statusText);
-    return response;
-  }
+  deleteMessage(id) {
+    let idObj = { "_id": id }
+    fetch("http://localhost:3000/api/v1/msgs", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(idObj)
+    })
+      .then(response => this.handleHTTPErrors(response))
+      .then(result => result.json())
+      .then(result => {
+        let newMsgs = this.state.messages;
+        newMsgs = newMsgs.filter(msg => msg._id !== result.id);
+        this.setState({
+          messages: newMsgs
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
-  async addMessage(message) {
-    await fetch("http://localhost:3000/api/v1/msgs", {
+  addMessage(message) {
+    console.log(message);
+    fetch("http://localhost:3000/api/v1/msgs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -42,8 +68,8 @@ class MsgBoard extends React.Component {
       .then(response => this.handleHTTPErrors(response))
       .then(result => result.json())
       .then(result => {
-        console.log(result);
-        let newMsgs = [result].concat(this.state.messages);
+        console.log([result]);
+        let newMsgs = [result].concat(this.state.messages)
         this.setState({
           messages: newMsgs
         });
@@ -57,7 +83,7 @@ class MsgBoard extends React.Component {
     return (
       <React.Fragment>
         <NewMsg addMsgCallback={this.addMessage} />
-        <MsgList messages={this.state.messages}/>
+        <MsgList messages={this.state.messages} deleteMsgCallback={this.deleteMessage}/>
       </React.Fragment>
     );
   }
