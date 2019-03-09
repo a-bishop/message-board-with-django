@@ -20,7 +20,7 @@ class MsgBoard extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/api/v1/msgs")
+    fetch(`${process.env.API_URL}`)
       .then(response => this.handleHTTPErrors(response))
       .then(response => response.json())
       .then(result => {
@@ -34,8 +34,8 @@ class MsgBoard extends React.Component {
   }
 
   deleteMessage(id) {
-    let idObj = { "_id": id }
-    fetch("http://localhost:3000/api/v1/msgs", {
+    let idObj = { "_id": id };
+    fetch(`${process.env.API_URL}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -58,7 +58,7 @@ class MsgBoard extends React.Component {
 
   addMessage(message) {
     console.log(message);
-    fetch("http://localhost:3000/api/v1/msgs", {
+    fetch(`${process.env.API_URL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

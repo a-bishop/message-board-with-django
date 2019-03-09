@@ -17,6 +17,7 @@ const getAllMessagesOrderedByLastPosted = (req, res) => {
 
 // POST Request Handler
 const addNewMessage = (req, res) => {
+  console.log(req);
   messageModel.create(req.body, (err, message) => {
     if (err) {
       res.status(400).json(err);
@@ -28,6 +29,7 @@ const addNewMessage = (req, res) => {
 
 // DELETE Request Handler
 const deleteMessage = (req, res) => {
+  console.log(req);
   messageModel.findOneAndDelete(req.body, (err, msg) => {
     if (err) return res.status(500).send(err);
     const response = {
